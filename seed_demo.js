@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+// Fix: local router DNS blocks MongoDB Atlas SRV lookups — use Google DNS
+require('dns').setServers(['8.8.8.8', '8.8.4.4']);
+
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const Company = require('./models/Company');
