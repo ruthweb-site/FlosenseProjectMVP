@@ -20,6 +20,35 @@ app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     next();
 });
+
+// Serve firebase-config.js dynamically to inject environment variables
+app.get('/js/firebase-config.js', (req, res) => {
+    res.type('application/javascript');
+    res.send(`
+// Firebase Configuration (Injected via Backend)
+const firebaseConfig = {
+    apiKey: "${process.env.FIREBASE_API_KEY}",
+    authDomain: "${process.env.FIREBASE_AUTH_DOMAIN}",
+    projectId: "${process.env.FIREBASE_PROJECT_ID}",
+    storageBucket: "${process.env.FIREBASE_STORAGE_BUCKET}",
+    messagingSenderId: "${process.env.FIREBASE_MESSAGING_SENDER_ID}",
+    appId: "${process.env.FIREBASE_APP_ID}",
+    measurementId: "${process.env.FIREBASE_MEASUREMENT_ID}"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+// Initialize Services
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+console.log("🚀 Firebase Initialized Safely via Backend");
+    `);
+});
+
 app.use(express.static(__dirname));
 
 // Load routes
@@ -41,6 +70,19 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages',     messageRoutes);
 app.use('/api/recommend',    recommendationRoutes);
 app.use('/api/nl-query',     nlQueryRoutes);
+
+// Firebase Config Route (to avoid hardcoding keys in JS files)
+app.get('/api/config/firebase', (req, res) => {
+    res.json({
+        apiKey: process.env.FIREBASE_API_KEY,
+        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.FIREBASE_APP_ID,
+        measurementId: process.env.FIREBASE_MEASUREMENT_ID
+    });
+});
 
 // Root route
 app.get('/', (req, res) => {
