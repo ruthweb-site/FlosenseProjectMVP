@@ -68,16 +68,25 @@ exports.login = async (req, res) => {
         }
 
         // Check for company
-        const company = await Company.findOne({ email, company_code }).select('+password');
+        console.log('LOGIN ATTEMPT:', { email, company_code });
+        const company = await Company.findOne({ 
+            email, 
+            company_code: { $regex: new RegExp("^" + company_code + "$", "i") } 
+        }).select('+password');
+        
         if (!company) {
+            console.log('COMPANY NOT FOUND:', { email, company_code });
             return res.status(401).json({ success: false, message: 'Invalid email, password, or company code.' });
         }
 
+        console.log('COMPANY FOUND, CHECKING PASSWORD...');
         // Check password
         const isMatch = await company.matchPassword(password);
         if (!isMatch) {
+            console.log('PASSWORD MISMATCH');
             return res.status(401).json({ success: false, message: 'Invalid email, password, or company code.' });
         }
+        console.log('PASSWORD MATCHED, LOGGING IN...');
 
         // Generate token
         const token = jwt.sign({ id: company._id }, process.env.JWT_SECRET, {

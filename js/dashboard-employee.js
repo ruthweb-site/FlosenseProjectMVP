@@ -3802,4 +3802,36 @@ window.addEventListener('click', (e) => {
         }
     }
 });
+// ── Demo Mode Pulse (Team Lead) ──
+window.addEventListener('DOMContentLoaded', () => {
+    // Check if we are in the demo employee environment (Vedika Iyer)
+    const userName = localStorage.getItem('userName');
+    if (userName === 'Vedika Iyer') {
+        setTimeout(() => {
+            // 1. Welcome Toast
+            if (typeof showToast === 'function') {
+                showToast('Welcome Team Lead Demo: Vedika Iyer', 'success');
+            }
 
+            // 2. Guide to project context
+            setTimeout(() => {
+                if (typeof showToast === 'function') {
+                    showToast('AI: You have 1 active stream: Phoenix Smart Match.', 'info');
+                }
+                
+                // Highlight the project context switcher
+                const trigger = document.querySelector('.global-context-trigger');
+                if (trigger) {
+                    trigger.style.boxShadow = '0 0 15px rgba(99, 102, 241, 0.5)';
+                    trigger.style.borderColor = '#6366f1';
+                }
+
+                setTimeout(() => {
+                   if (typeof showToast === 'function') {
+                       showToast('TIP: Switch projects in the top bar to filter your dashboard.', 'info');
+                   }
+                }, 3000);
+            }, 2500);
+        }, 1500);
+    }
+});

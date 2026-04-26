@@ -3009,3 +3009,34 @@ async function runDataMigration() {
         }, 5000);
     }
 }
+
+// ── Demo Mode Pulse ──
+window.addEventListener('DOMContentLoaded', () => {
+    // Check if we are in the demo company environment
+    const userName = localStorage.getItem('userName');
+    if (userName === 'FlowSense Demo Corp') {
+        setTimeout(() => {
+            // 1. Welcome Toast
+            if (typeof showToast === 'function') {
+                showToast('Demo Environment Loaded: FlowSense Demo Corp', 'success');
+            }
+
+            // 2. Highlight Insights after a delay
+            setTimeout(() => {
+                if (typeof showToast === 'function') {
+                    showToast('AI ANALYZER: Detecting workload imbalances in Phoenix Project...', 'info');
+                }
+                
+                // Optional: Force switch to overview if not already there
+                if (FlowSenseState.currentView === 'overview') {
+                    // Pulse the stat cards or highlight the rebalance alert
+                    const alert = document.querySelector('.suggestion-card');
+                    if (alert) {
+                        alert.style.boxShadow = '0 0 20px rgba(139, 92, 246, 0.4)';
+                        alert.style.border = '1px solid var(--primary-violet)';
+                    }
+                }
+            }, 3000);
+        }, 1500);
+    }
+});

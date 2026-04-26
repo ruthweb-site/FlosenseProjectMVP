@@ -22,6 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=6366f1&color=fff`;
 
     setupTextarea();
+
+    // ── Demo Mode Nudge ──
+    if (userName === 'FlowSense Demo Corp') {
+        setTimeout(() => {
+            appendBotMessage("Welcome to the Demo Environment! I have analyzed your preloaded project data. You can try asking me: **'Who is overloaded right now?'** or **'Which project has the lowest progress?'**");
+        }, 1000);
+    }
 });
 
 // ── Auto-resize textarea ──
