@@ -11,9 +11,12 @@ const connectDB = async () => {
         });
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
-        console.error(`❌ Error: ${error.message}`);
-        process.exit(1);
+        console.error(`❌ MongoDB Connection Error: ${error.message}`);
+        // Do not call process.exit(1) here.
+        // This allows the server to start even if DB is down,
+        // and return JSON error messages instead of crashing with a 500 page.
     }
+
 };
 
 module.exports = connectDB;
